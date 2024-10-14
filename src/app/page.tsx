@@ -3,7 +3,7 @@
 // src/app/page.tsx
 import { useState } from "react"; // Import useState for managing component state
 import { Container } from "@/components/Container";
-import { Hero } from "@/components/Hero";
+import EventVerifier from "@/components/EventVerifier"; // Import EventVerifier
 import EventCreator from "@/components/EventCreator"; // Import EventCreator
 
 export default function Home() {
@@ -16,27 +16,30 @@ export default function Home() {
   };
 
   return (
-    <Container>
+    <Container className="flex flex-col items-center">
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-2xl font-bold">Select Your Role</h1>
         <div className="flex gap-4">
           <button
             onClick={() => handleRoleSelection(true)}
-            className={`p-2 ${isEventCreator ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+            className={`p-2 ${isEventCreator ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-gray-900 focus:outline-none focus:bg-gray-300 focus:text-gray-900"} rounded-md shadow-md`}
           >
             Event Creator
           </button>
           <button
             onClick={() => handleRoleSelection(false)}
-            className={`p-2 ${!isEventCreator ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+            className={`p-2 ${!isEventCreator ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-gray-900 focus:outline-none focus:bg-gray-300 focus:text-gray-900"} rounded-md shadow-md`}
           >
             Event Enthusiast
           </button>
         </div>
       </div>
 
-      {/* Conditionally render EventCreator or Hero only if a role is selected */}
-      {roleSelected && (isEventCreator ? <EventCreator /> : <Hero />)}
+      {/* Render EventVerifier only if the Event Enthusiast role is selected */}
+      {roleSelected && !isEventCreator && <EventVerifier />}
+      
+      {/* Conditionally render EventCreator only if the Event Creator role is selected */}
+      {roleSelected && isEventCreator && <EventCreator />}
     </Container>
   );
 }

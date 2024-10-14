@@ -6,7 +6,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import Footer from "@/components/Footer";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -31,7 +31,7 @@ export default function RootLayout({
                 <main className="flex-grow"> {/* Allow main content to grow */}
                   {children}
                 </main>
-                <Footer className="mt-auto" /> {/* Footer stays at the bottom */}
+                <Footer /> {/* Footer stays at the bottom */}
               </ThemeProvider>
             </RainbowKitProvider>
           </QueryClientProvider>

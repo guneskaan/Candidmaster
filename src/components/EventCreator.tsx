@@ -54,7 +54,7 @@ const EventCreator = () => {
   }, [isConfirmed, receipt, ticketManagerInterface]);
 
   return (
-    <div className="p-4">
+    <div className="p-4 mt-80">
       <h2 className="text-lg font-bold">Create Event</h2>
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <input
