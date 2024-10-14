@@ -1,7 +1,6 @@
-// src/components/EventVerifier.tsx
 import { useState } from "react";
 import { Container } from "@/components/Container";
-import { SeatPicker } from "@/components/SeatPicker";
+import SeatPicker from "@/components/SeatPicker"; // Changed to default import
 
 const EventVerifier = () => {
   const [eventUuid, setEventUuid] = useState("");
@@ -44,7 +43,7 @@ const EventVerifier = () => {
           </button>
         </>
       )}
-      {isEventConfirmed && <SeatPicker />}
+      {isEventConfirmed && <SeatPicker eventUuid={eventUuid} />} {/* Pass eventUuid as a prop */}
     </Container>
   );
 };
