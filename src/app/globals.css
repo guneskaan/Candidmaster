@@ -1,13 +1,36 @@
+/* globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
-  html,
-  body {
-    @apply dark:bg-trueGray-900;
-  }
+
+/* Ensure that the body takes the full height of the viewport */
+html, body {
+  height: 100%; /* Full height */
+  margin: 0; /* Remove default margin */
 }
 
+/* Flex layout for the body */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main should grow to fill the remaining space */
+.main {
+  flex-grow: 1; /* Allow main content to grow and fill available space */
+}
+
+/* Styles for footer */
+.footer {
+  padding: 2rem 0; /* Padding for footer */
+  border-top: 1px solid #eaeaea; /* Border for separation */
+  display: flex; /* Use flexbox for footer items */
+  justify-content: center; /* Center footer content */
+  align-items: center; /* Center vertically */
+  width: 100%; /* Full width of the parent */
+}
+
+  
+}

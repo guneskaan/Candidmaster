@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import '@rainbow-me/rainbowkit/styles.css';
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
@@ -21,19 +22,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-      <WagmiProvider config={config}>
-      <QueryClientProvider client={client}>
-        <RainbowKitProvider>
-          
-        <ThemeProvider attribute="class">
-          <Navbar />
-          <div>{children}</div>
-          <Footer />
-        </ThemeProvider>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={client}>
+            <RainbowKitProvider>
+              <ThemeProvider attribute="class">
+                <Navbar />
+                <main className="flex-grow"> {/* Allow main content to grow */}
+                  {children}
+                </main>
+                <Footer className="mt-auto" /> {/* Footer stays at the bottom */}
+              </ThemeProvider>
+            </RainbowKitProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
       </body>
     </html>
   );

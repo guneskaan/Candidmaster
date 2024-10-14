@@ -7,7 +7,13 @@ import { Hero } from "@/components/Hero";
 import EventCreator from "@/components/EventCreator"; // Import EventCreator
 
 export default function Home() {
+  const [roleSelected, setRoleSelected] = useState(false); // State to track if a role has been selected
   const [isEventCreator, setIsEventCreator] = useState(false); // State to track selected mode
+
+  const handleRoleSelection = (isCreator: boolean) => {
+    setIsEventCreator(isCreator);
+    setRoleSelected(true); // Set role as selected
+  };
 
   return (
     <Container>
@@ -15,13 +21,13 @@ export default function Home() {
         <h1 className="text-2xl font-bold">Select Your Role</h1>
         <div className="flex gap-4">
           <button
-            onClick={() => setIsEventCreator(true)}
+            onClick={() => handleRoleSelection(true)}
             className={`p-2 ${isEventCreator ? "bg-blue-500 text-white" : "bg-gray-200"}`}
           >
             Event Creator
           </button>
           <button
-            onClick={() => setIsEventCreator(false)}
+            onClick={() => handleRoleSelection(false)}
             className={`p-2 ${!isEventCreator ? "bg-blue-500 text-white" : "bg-gray-200"}`}
           >
             Event Enthusiast
@@ -29,8 +35,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Conditionally render Hero or EventCreator based on the selected role */}
-      {isEventCreator ? <EventCreator /> : <Hero />}
+      {/* Conditionally render EventCreator or Hero only if a role is selected */}
+      {roleSelected && (isEventCreator ? <EventCreator /> : <Hero />)}
     </Container>
   );
 }
