@@ -8,8 +8,13 @@ const EventCreator = () => {
   const [eventName, setEventName] = useState("");
   const [ticketPrice, setTicketPrice] = useState("");
   const [eventUuid, setEventUuid] = useState(""); // State to store the event UUID
+  const [isEventCreator, setIsEventCreator] = useState<boolean | null>(null); // Track role selection
   const { data: hash, writeContract } = useWriteContract();
   const ticketManagerInterface = new Interface(TicketManagerABI);
+
+  const handleRoleSelection = (isCreator: boolean) => {
+    setIsEventCreator(isCreator);
+  };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -19,6 +24,17 @@ const EventCreator = () => {
       abi: TicketManagerABI,
       functionName: 'createEvent',
       args: [eventName, ticketPrice],
+    });
+  }
+
+  async function handleWithdraw(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    await writeContract({
+      address: '0xACDe419756038dBd32E39dC362fccEd43aACadD5',
+      abi: TicketManagerABI,
+      functionName: 'withdraw',
+      args: [eventUuid],
     });
   }
 
@@ -55,30 +71,73 @@ const EventCreator = () => {
 
   return (
     <div className="p-4 mt-80">
-      <h2 className="text-lg font-bold">Create Event</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        <input
-          type="text"
-          placeholder="Event Name"
-          value={eventName}
-          onChange={(e) => setEventName(e.target.value)}
-          className="p-2 border border-gray-300 rounded"
-          required
-        />
-        <input
-          type="number"
-          placeholder="Ticket Price (in wei)"
-          value={ticketPrice}
-          onChange={(e) => setTicketPrice(e.target.value)}
-          className="p-2 border border-gray-300 rounded"
-          required
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+      <h2 className="text-lg font-bold text-center mb-4">Select Option</h2> {/* Changed to "Select Option" and centered */}
+      <div className="flex justify-center space-x-4 mb-4">
+        <button
+          onClick={() => {
+            handleRoleSelection(true);
+            setEventName(""); // Clear form on selection
+            setTicketPrice("");
+            setEventUuid("");
+          }}
+          className={`p-2 ${isEventCreator === true ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-gray-900 focus:outline-none focus:bg-gray-300 focus:text-gray-900"} rounded-md shadow-md`}
+        >
           Create Event
         </button>
-        {isConfirming && <div>Waiting for confirmation...</div>}
-        {isConfirmed && eventUuid && <div>Event confirmed! Event UUID: {eventUuid}</div>}
-      </form>
+        <button
+          onClick={() => {
+            handleRoleSelection(false);
+            setEventName(""); // Clear form on selection
+            setTicketPrice("");
+            setEventUuid("");
+          }}
+          className={`p-2 ${isEventCreator === false ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-gray-900 focus:outline-none focus:bg-gray-300 focus:text-gray-900"} rounded-md shadow-md`}
+        >
+          Withdraw Ticket Sales
+        </button>
+      </div>
+
+      {isEventCreator === true && (
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4 mb-4">
+          <input
+            type="text"
+            placeholder="Event Name"
+            value={eventName}
+            onChange={(e) => setEventName(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+            required
+          />
+          <input
+            type="number"
+            placeholder="Ticket Price (in wei)"
+            value={ticketPrice}
+            onChange={(e) => setTicketPrice(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+            required
+          />
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+            Create Event
+          </button>
+          {isConfirming && <div>Waiting for confirmation...</div>}
+          {isConfirmed && eventUuid && <div>Event confirmed! Event UUID: {eventUuid}</div>}
+        </form>
+      )}
+
+      {isEventCreator === false && (
+        <form onSubmit={handleWithdraw} className="flex flex-col space-y-4 mb-4">
+          <input
+            type="text"
+            placeholder="Event UUID"
+            value={eventUuid}
+            onChange={(e) => setEventUuid(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+            required
+          />
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+            Withdraw Ticket Sales
+          </button>
+        </form>
+      )}
     </div>
   );
 };

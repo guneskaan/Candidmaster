@@ -3,6 +3,19 @@
     "inputs": [
       {
         "internalType": "string",
+        "name": "eventUuid",
+        "type": "string"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
         "name": "eventName",
         "type": "string"
       },
@@ -46,6 +59,48 @@
       {
         "internalType": "uint256",
         "name": "soldCount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "eventUuid",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "seatNumber",
+        "type": "string"
+      }
+    ],
+    "name": "purchaseSeat",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "eventUuid",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "seatName",
+        "type": "string"
+      }
+    ],
+    "name": "getSeatNFT",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "nft",
         "type": "uint256"
       }
     ],

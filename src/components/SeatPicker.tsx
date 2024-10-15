@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import { useReadContract } from "wagmi";
 import Image from "next/image";
@@ -18,13 +19,14 @@ const SeatPicker: React.FC<{ eventUuid: string }> = ({ eventUuid }) => {
   const [seats, setSeats] = useState<string[]>([]);
 
   // Use wagmi to read contract
-  const { data: fetchedEventData } = useReadContract({
+  const { data: fetchedEventData, refetch } = useReadContract({
     abi: TicketManagerABI,
-    address: '0xacde419756038dbd32e39dc362fcced43aacadd5',
+    address: '0xACDe419756038dBd32E39dC362fccEd43aACadD5',
     functionName: 'getEvent',
-    args: [eventUuid],
+    args: [eventUuid]
   });
 
+  // Use effect to process fetched event data and generate seats
   useEffect(() => {
     if (fetchedEventData && Array.isArray(fetchedEventData)) {
       const [name, ticketPrice, soldCount] = fetchedEventData as [string, bigint, number]; // Adjusted types
@@ -46,27 +48,55 @@ const SeatPicker: React.FC<{ eventUuid: string }> = ({ eventUuid }) => {
     }
   }, [fetchedEventData]);
 
+  useEffect(() => {
+    // Fetch event data immediately on mount
+    refetch();
+
+    // Set an interval to fetch data every 20 seconds
+    const intervalId = setInterval(() => {
+      refetch();
+    }, 20000);
+
+    // Cleanup the interval on component unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [eventUuid, refetch]);
+
   return (
-    <div className="flex flex-col items-center">
-      <Image
-        src={heroImg}
-        height={0}
-        width={0}
-        style={{ width: "600px", height: "auto" }}
-        className="object-cover mb-4"
-        alt="Hero Illustration"
-        loading="eager"
-        placeholder="blur"
-      />
-      <div className="flex flex-wrap justify-start">
-        {seats.map((seat, index) => (
-          <SeatButton
-            key={index}
-            seatNumber={seat}
-            eventUuid={eventUuid}
-            ticketPrice={eventData?.ticketPrice || BigInt(0)} // Ensure it's a bigint
-          />
-        ))}
+    <div className="flex flex-col items-center mb-4"> {/* Center items */}
+      {eventData && (
+        <h2 className="text-xl font-bold mb-4 text-center">{eventData.name}</h2> // Center the event name
+      )}
+      <div className="flex"> {/* Flex container for image and seats */}
+        <Image
+          src={heroImg}
+          height={0}
+          width={0}
+          style={{ width: "600px", height: "auto" }}
+          className="object-cover mb-4"
+          alt="Hero Illustration"
+          loading="eager"
+          placeholder="blur"
+        />
+        <div className="ml-4"> {/* Left margin for spacing */}
+          {/* Render seats in rows */}
+          {Array.from({ length: 8 }, (_, rowIndex) => ( // 8 rows for A to H
+            <div key={rowIndex} className="flex mb-2"> {/* Flex container for each row */}
+              {Array.from({ length: 5 }, (_, seatIndex) => { // 10 seats per row
+                const seat = String.fromCharCode(65 + rowIndex) + (seatIndex + 1); // Generate seat names
+                return (
+                  <SeatButton
+                    key={seat}
+                    seatNumber={seat}
+                    eventUuid={eventUuid}
+                    ticketPrice={eventData?.ticketPrice || BigInt(0)} // Ensure it's a bigint
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
